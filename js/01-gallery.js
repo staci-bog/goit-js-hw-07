@@ -17,16 +17,24 @@ function onCLickImg(event) {
 
   //TODO creating + show modal
   const instance = basicLightbox.create(`
-      <img src="${event.target.dataset.source}" width="800" height="600">
-  `);
+      <img src="${event.target.dataset.source}" width="800" height="600">`,
+      { 
+        onShow: (instance) => {
+          document.addEventListener('keydown', (event) => {
+            onEscapeHandler(event, instance);
+          });
+      },
+    onClose: (instance) => {
+      document.removeEventListener('keydown', onEscapeHandler);
+    }});
   instance.show();
 
   //TODO close modal
-  ref.gallery.addEventListener('keydown', event => {
-   if (event.code === 'Escape') {
-      instance.close();
-    }
-  });
+ // ref.gallery.addEventListener('keydown', event => {
+  // if (event.code === 'Escape') {
+  //    instance.close();
+  //  }
+  //});
 }
 
 function createGalleryEl(galleryItems) {
@@ -44,4 +52,10 @@ function createGalleryEl(galleryItems) {
     </li>`;
     })
     .join('');
+}
+
+function onEscapeHandler(event, instance) {
+  if (event.code === 'Escape') {
+    instance.close();
+  }
 }
